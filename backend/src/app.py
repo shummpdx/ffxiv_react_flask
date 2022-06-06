@@ -15,20 +15,33 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @cross_origin(origin='localhost')
 def character():
     data = request.get_json()
-    model.insert(data['id'], data['name'], data['avatar'], data['searchId'])
+    try:
+        model.insertProfile(data['id'], data['titleId'], data['job'], data['level'], data['portrait'])
+    except Exception as e:
+        print("error", e)
+    try:
+        model.insert(data['id'], data['name'], data['avatar'], data['searchId'])
+    except Exception as e:
+        print(e)
     return 'OK'
 
 @app.route("/getCharacters", methods=['POST'])
 @cross_origin(origin='localhost')
 def getCharacter():
     data = request.get_json()
-    print("searchId: ", data['searchId']);
-    entries = [dict(id=row[0], name=row[1], avatar=row[2]) for row in model.selectResults(data['searchId'])]
-    #print(entries)
+    entries = [dict(name=row[0], avatar=row[1]) for row in model.selectResults(data['searchId'])]
     newEntries = json.dumps(entries)
-    #print(newEntries)
     return newEntries
-    #return 'OK'
+
+@app.route("/getProfiles", methods=['POST'])
+@cross_origin(origin='localhost')
+def getProfile():
+    data = request.get_json()
+    entries = [dict(name=row[0], avatar=row[1]) for row in model.selectProfile(data['searchId'])]
+    #print(entries)
+    #newEntries = json.dumps(entries)
+    #return newEntries
+    return 'OK'
      
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
