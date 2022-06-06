@@ -1,7 +1,6 @@
 {
   "name": "life_expectancy",
   "version": "0.1.0",
-  "proxy": "http://xivapi.local",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-dotenv && react-scripts build",
