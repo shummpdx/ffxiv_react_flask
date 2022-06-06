@@ -1,0 +1,20 @@
+.displayContainer {
+    align-items: center;
+    margin: auto;
+    width: 79%;
+}
+
+.display {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    row-gap: 1%;
+}
+
+.profileContainer {
+    border: black solid 1px;
+    place-self: center;
+}
+
+.profile {
+    text-align: center;
+}
