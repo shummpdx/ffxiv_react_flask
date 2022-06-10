@@ -3,7 +3,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { SearchForm } from "./SearchForm";
 import { characterSearch, profileSearch, titleSearch} from "./services/characterSearch";
-import { DisplayProfiles } from "./DisplayProfiles"
+import { DisplayCharacter } from "./DisplayCharacter"
+import { DisplayProfile } from "./DisplayProfile";
 import { retreiveCharacters, retreiveProfile, storeCharacters, storeProfile } from "./services/databaseServices";
 import random from 'lodash.random'
 
@@ -33,9 +34,10 @@ export default function FFXIVSearch() {
   const [search, setSearch] = useState(initialSearchState);
   const [submitted, setSubmitted] = useState(false);
   const [character, setCharacter] = useState(initialCharacterState);
-  const [profilesToDisplay, setProfilesToDisplay] = useState([]);
+  const [charactersToDisplay, setCharactersToDisplay] = useState([]);
 
   const [profile, setProfile] = useState(initialProfileState);
+  const [profilesToDisplay, setProfilesToDisplay] = useState([]);
 
   const submitRequest = () => {
     //const profileCopy = profile;
@@ -55,26 +57,27 @@ export default function FFXIVSearch() {
         storeCharacters(character);
         retreiveCharacters(searchId)
         .then((response) => {
-          setProfilesToDisplay(response.data);
+          setCharactersToDisplay(response.data);
           profileSearch(character.id)
           .then((response) => {
             const newProfile = profile;
-              newProfile.id = response.data.Character.ID;
-              newProfile.job = response.data.Character.ActiveClassJob.UnlockedState.Name;
-              newProfile.level = response.data.Character.ActiveClassJob.Level;
-              newProfile.portrait = response.data.Character.Portrait;
-              newProfile.titleId = response.data.Character.Title;
-              newProfile.name = response.data.Character.Name;
-              setProfile(newProfile);
-              storeProfile(profile);
-              {/*retreiveProfile(searchId)
-              .then((response) => {
-                console.log(response)
-              })*/}
+            newProfile.id = response.data.Character.ID;
+            newProfile.job = response.data.Character.ActiveClassJob.UnlockedState.Name;
+            newProfile.level = response.data.Character.ActiveClassJob.Level;
+            newProfile.portrait = response.data.Character.Portrait;
+            newProfile.titleId = response.data.Character.Title;
+            newProfile.name = response.data.Character.Name;
+            setProfile(newProfile);
+            storeProfile(newProfile);
+            retreiveProfile(searchId)
+            .then((response) => {
+              console.log(response)
+              setProfilesToDisplay(response.data); 
             })
           })
         })
       })
+    })
   }
 
   const handleInputChange = event => {
@@ -90,11 +93,13 @@ export default function FFXIVSearch() {
     <>
       {submitted ? (
         <>
-        <div className="displayContainer">
+
+        <DisplayProfile profilesToDisplay={profilesToDisplay} />
+        {/*<div className="displayContainer">
           <div className="display">
-            <DisplayProfiles profilesToDisplay={profilesToDisplay} />
+            <DisplayCharacter charactersToDisplay={charactersToDisplay} />
           </div>
-        </div>
+        </div>*/}
         <button type="button" onClick={resetPage}>Reset</button>   
         </>
       ) : (
