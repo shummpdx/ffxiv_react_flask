@@ -21,10 +21,12 @@ class model(Model):
         return result
 
     def selectProfile(self, searchId):
-        #connection = sqlite3.connect(DB_FILE)
-        #cursor = connection.cursor()
-        #result = cursor.execute("SELECT name, portrait FROM characters WHERE searchID = ?", (searchId,)).fetchall()
-        return 'OK'
+        connection = sqlite3.connect(DB_FILE)
+        cursor = connection.cursor()
+        # result = cursor.execute("SELECT name, portrait FROM characters WHERE searchID = ?", (searchId,)).fetchall()
+        #result = cursor.execute("SELECT name, portrait FROM characters WHERE searchId = ? AND portrait IS NOT NULL", (searchId,)).fetchall()
+        result = cursor.execute("SELECT * FROM characters WHERE portrait IS NOT NULL").fetchall()
+        return result 
 
     def insert(self, id, name, avatar, searchId):
         params = {'id':id, 'name':name, 'avatar':avatar, 'searchId':searchId}
