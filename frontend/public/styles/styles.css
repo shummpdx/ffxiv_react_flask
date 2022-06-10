@@ -10,11 +10,21 @@
     row-gap: 1%;
 }
 
-.profileContainer {
+.characterContainer {
     border: black solid 1px;
     place-self: center;
 }
 
-.profile {
+.character {
     text-align: center;
+}
+
+.profileContainer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.profile {
+    max-width: 100px;
 }
