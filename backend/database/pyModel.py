@@ -10,28 +10,20 @@ class model(Model):
         try:
             cursor.execute("select count(rowid) from characters")
         except sqlite3.OperationalError:
-            cursor.execute("create table characters (id text, name text, titleId int, job text, level int, avatar text, portrait text, searchId int)")
+            cursor.execute("create table characters (id text, name text, titleId int, job text, level int, avatar text, portrait text)")
         cursor.close()
     
-    def selectResults(self, searchId):
-        print("mySearchID: ", searchId)
+    def selectProfile(self, name):
         connection = sqlite3.connect(DB_FILE)
         cursor = connection.cursor()
-        result = cursor.execute("SELECT name, avatar FROM characters WHERE searchId = ?", (searchId,)).fetchall()
-        return result
-
-    def selectProfile(self, searchId):
-        connection = sqlite3.connect(DB_FILE)
-        cursor = connection.cursor()
-        result = cursor.execute("SELECT * FROM characters WHERE portrait IS NOT NULL").fetchall()
-        print("selectProfile: ", result)
+        result = cursor.execute("SELECT * FROM characters WHERE name LIKE ?", ('%' + name + '%',)).fetchall()
         return result 
 
-    def insert(self, id, name, titleId, job, level, portrait, searchId):
-        params = {'id':id, 'name':name, 'title':titleId, 'job':job, 'level':level, 'portrait':portrait, 'searchId':searchId}
+    def insert(self, id, name, titleId, job, level, portrait):
+        params = {'id':id, 'name':name, 'title':titleId, 'job':job, 'level':level, 'portrait':portrait}
         connection = sqlite3.connect(DB_FILE)
         cursor = connection.cursor()
-        cursor.execute("insert into characters (id, name, titleId, job, level, portrait, searchId) VALUES (:id, :name, :title, :job, :level, :portrait, :searchId)", params)
+        cursor.execute("insert into characters (id, name, titleId, job, level, portrait) VALUES (:id, :name, :title, :job, :level, :portrait)", params)
         connection.commit()
         cursor.close()
         return True
