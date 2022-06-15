@@ -1,30 +1,15 @@
 import { databaseClient } from "./HttpService";
 
-export function storeCharacters(character) {
-    return databaseClient.post("/character", 
-    {
-        id: character.id, 
-        name: character.name, 
-        avatar: character.avatar, 
-        searchId: character.searchId
-    })
-}
-
-export function retreiveCharacters(searchId) {
-    return databaseClient.post("/getCharacters", 
-    {
-        searchId: searchId
-    })
-}  
-
-export function storeProfile(profile) {
+export function storeProfile(profile, searchId) {
     return databaseClient.post("/profile", 
     {
-        id: profile.id, 
-        titleId: profile.titleId, 
-        job: profile.job, 
-        level: profile.level, 
-        portrait: profile.portrait
+        id: profile.data.Character.ID, 
+        name: profile.data.Character.Name,
+        titleId: profile.data.Character.Title, 
+        job: profile.data.Character.ActiveClassJob.UnlockedState.Name, 
+        level: profile.data.Character.ActiveClassJob.Level, 
+        portrait: profile.data.Character.Portrait,
+        searchId: searchId
     })
 }
 
