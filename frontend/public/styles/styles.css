@@ -7,7 +7,8 @@
 .display {
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .characterContainer {
@@ -19,12 +20,6 @@
     text-align: center;
 }
 
-.profileContainer {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-}
-
-.profile {
-    max-width: 100px;
+.profileName {
+    font-size: xx-large;
 }

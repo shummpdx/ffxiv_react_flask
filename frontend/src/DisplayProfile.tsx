@@ -7,7 +7,7 @@ export const DisplayProfile  = ( {profilesToDisplay} ) => {
                 <>
                     <div className="profileContainer">
                         <div className="profile">
-                            <p>{profile.name}</p>
+                            <p className="profileName">{profile.name}</p>
                             <p><img src={profile.portrait}></img></p>
                         </div>
                     </div>
