@@ -11,18 +11,12 @@ CORS(app)
 model = database.get_model()
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route("/character", methods=['POST'])
-@cross_origin(origin='localhost')
-def character():
-    data = request.get_json()
-    model.insert(data['id'], data['name'], data['avatar'], data['searchId'])
-    return 'OK'
-
 @app.route("/profile", methods=['POST'])
 @cross_origin(origin='localhost')
 def profile():
     data = request.get_json()
-    model.insertProfile(data['id'], data['titleId'], data['job'], data['level'], data['portrait'])
+    print(data['searchId'])
+    model.insert(data['id'], data['name'], data['titleId'], data['job'], data['level'], data['portrait'], data['searchId'])
     return 'OK'
 
 @app.route("/getCharacters", methods=['POST'])
@@ -39,7 +33,7 @@ def getProfile():
     data = request.get_json()
     entries = [dict(name=row[1], portrait=row[6]) for row in model.selectProfile(data['searchId'])]
     newEntries = json.dumps(entries)
-    print("newEntries:", newEntries)
+    #print("newEntries:", newEntries)
     return newEntries
      
 if __name__ == '__main__':
