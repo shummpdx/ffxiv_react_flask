@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { SearchForm } from "./SearchForm";
 import { characterSearch, profileSearch } from "./services/characterSearch";
-import { retreiveProfile, storeProfile } from "./services/databaseServices";
+import { retrieveProfile, storeProfile } from "./services/databaseServices";
 import random from 'lodash.random'
 import { DisplayProfile } from "./DisplayProfile";
 
@@ -36,7 +36,7 @@ export default function FFXIVSearch() {
         })
         .then((result) => {
           storeProfile(result);
-          retreiveProfile(search.name)
+          retrieveProfile(search.name)
           .then((response) => {
             const allProfiles = response.data;
             console.log(allProfiles);

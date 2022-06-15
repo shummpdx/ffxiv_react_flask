@@ -12,7 +12,7 @@ export function storeProfile(profile) {
     })
 }
 
-export function retreiveProfile(name) {
+export function retrieveProfile(name) {
     return databaseClient.post("/getProfiles", 
     {
         name: name,
