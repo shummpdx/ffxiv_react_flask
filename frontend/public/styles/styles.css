@@ -5,9 +5,9 @@
 }
 
 .display {
-    display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
-    row-gap: 1%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .characterContainer {
