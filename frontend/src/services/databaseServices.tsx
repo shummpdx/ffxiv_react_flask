@@ -1,6 +1,6 @@
 import { databaseClient } from "./HttpService";
 
-export function storeProfile(profile, searchId) {
+export function storeProfile(profile) {
     return databaseClient.post("/profile", 
     {
         id: profile.data.Character.ID, 
@@ -9,13 +9,12 @@ export function storeProfile(profile, searchId) {
         job: profile.data.Character.ActiveClassJob.UnlockedState.Name, 
         level: profile.data.Character.ActiveClassJob.Level, 
         portrait: profile.data.Character.Portrait,
-        searchId: searchId
     })
 }
 
-export function retreiveProfile(searchId) {
+export function retreiveProfile(name) {
     return databaseClient.post("/getProfiles", 
     {
-        searchId: searchId
+        name: name,
     })
 }
