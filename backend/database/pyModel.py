@@ -23,24 +23,15 @@ class model(Model):
     def selectProfile(self, searchId):
         connection = sqlite3.connect(DB_FILE)
         cursor = connection.cursor()
-        # result = cursor.execute("SELECT name, portrait FROM characters WHERE searchID = ?", (searchId,)).fetchall()
-        #result = cursor.execute("SELECT name, portrait FROM characters WHERE searchId = ? AND portrait IS NOT NULL", (searchId,)).fetchall()
         result = cursor.execute("SELECT * FROM characters WHERE portrait IS NOT NULL").fetchall()
+        print("selectProfile: ", result)
         return result 
 
-    def insert(self, id, name, avatar, searchId):
-        params = {'id':id, 'name':name, 'avatar':avatar, 'searchId':searchId}
+    def insert(self, id, name, titleId, job, level, portrait, searchId):
+        params = {'id':id, 'name':name, 'title':titleId, 'job':job, 'level':level, 'portrait':portrait, 'searchId':searchId}
         connection = sqlite3.connect(DB_FILE)
         cursor = connection.cursor()
-        cursor.execute("insert into characters (id, name, avatar, searchId) VALUES (:id, :name, :avatar, :searchId)", params)
-        connection.commit()
-        cursor.close()
-        return True
-
-    def insertProfile(self, id, title, job, level, portrait):
-        connection = sqlite3.connect(DB_FILE)
-        cursor = connection.cursor()
-        cursor.execute("UPDATE characters SET titleId = ?, job = ?, level = ?, portrait = ? WHERE id = ?", (title, job, level, portrait, id))
+        cursor.execute("insert into characters (id, name, titleId, job, level, portrait, searchId) VALUES (:id, :name, :title, :job, :level, :portrait, :searchId)", params)
         connection.commit()
         cursor.close()
         return True
