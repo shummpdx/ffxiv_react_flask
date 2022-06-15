@@ -1,12 +1,10 @@
-import { render } from "@testing-library/react";
-import React, { useState, useCallback, useEffect } from "react";
-import { Link, Outlet } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { SearchForm } from "./SearchForm";
-import { characterSearch, profileSearch, titleSearch} from "./services/characterSearch";
+import { characterSearch, profileSearch } from "./services/characterSearch";
 import { DisplayCharacter } from "./DisplayCharacter"
-import { DisplayProfile } from "./DisplayProfile";
-import { retreiveCharacters, retreiveProfile, storeCharacters, storeProfile } from "./services/databaseServices";
+import { retreiveProfile, storeProfile } from "./services/databaseServices";
 import random from 'lodash.random'
+import { DisplayProfile } from "./DisplayProfile";
 
 const initialSearchState = {
   name: "",
@@ -22,63 +20,44 @@ const initialProfileState = {
   titleId: 0,
 };
 
-const initialCharacterState = {
-  id: 0,
-  name: "",
-  avatar: "",
-  searchId: 0, 
-}
-
 export default function FFXIVSearch() {
 
   const [search, setSearch] = useState(initialSearchState);
   const [submitted, setSubmitted] = useState(false);
-  const [character, setCharacter] = useState(initialCharacterState);
-  const [charactersToDisplay, setCharactersToDisplay] = useState([]);
+  const [profile, getProfiles] = useState('');
+  const [profilesToDisplay, setProfilesToDisplay] = useState<any>([]);
 
-  const [profile, setProfile] = useState(initialProfileState);
-  const [profilesToDisplay, setProfilesToDisplay] = useState([]);
 
-  const submitRequest = () => {
-    //const profileCopy = profile;
+  useEffect(() => {
+    getAllProfiles();    
+  }, []);
+
+  const getAllProfiles = () => {
+ 
+  }
+
+  const searchId = random(0,100000);
+
+  const  submitRequest = () => {
     setSubmitted(true);
-    const searchId = random(0,100000);
-
     characterSearch(search)
     .then((response) => {
-      console.log("character response: ", response)
-      response.data.Results.map((results) => {
-        const newCharacter = character;
-        newCharacter.id = results.ID;
-        newCharacter.name = results.Name;
-        newCharacter.avatar = results.Avatar;
-        newCharacter.searchId = searchId;
-        setCharacter(newCharacter);
-        storeCharacters(character);
-        retreiveCharacters(searchId)
-        .then((response) => {
-          setCharactersToDisplay(response.data);
-          profileSearch(character.id)
+      response.data.Results.map((result) => {
+        profileSearch(result.ID)
+        .catch(function(error) {
+        })
+        .then((result) => {
+          storeProfile(result, searchId);
+          retreiveProfile(searchId)
           .then((response) => {
-            const newProfile = profile;
-            newProfile.id = response.data.Character.ID;
-            newProfile.job = response.data.Character.ActiveClassJob.UnlockedState.Name;
-            newProfile.level = response.data.Character.ActiveClassJob.Level;
-            newProfile.portrait = response.data.Character.Portrait;
-            newProfile.titleId = response.data.Character.Title;
-            newProfile.name = response.data.Character.Name;
-            setProfile(newProfile);
-            storeProfile(newProfile);
-            retreiveProfile(searchId)
-            .then((response) => {
-              console.log(response)
-              setProfilesToDisplay(response.data); 
-            })
+            console.log(response);
+            const allProfiles = response.data;
+            getProfiles(allProfiles);
           })
         })
       })
-    })
-  }
+   })
+  } 
 
   const handleInputChange = event => {
     const { name, value } = event.target;
@@ -93,14 +72,13 @@ export default function FFXIVSearch() {
     <>
       {submitted ? (
         <>
-
-        <DisplayProfile profilesToDisplay={profilesToDisplay} />
-        {/*<div className="displayContainer">
-          <div className="display">
-            <DisplayCharacter charactersToDisplay={charactersToDisplay} />
+          <div className="displayContainer">
+            <div className="display">
+              {/*<DisplayCharacter charactersToDisplay={charactersToDisplay} />*/}
+              <DisplayProfile profilesToDisplay={profile} />
+            </div>
           </div>
-        </div>*/}
-        <button type="button" onClick={resetPage}>Reset</button>   
+          <button type="button" onClick={resetPage}>Reset</button>   
         </>
       ) : (
         <>
