@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SearchForm } from "./SearchForm";
 import { characterSearch, profileSearch } from "./services/characterSearch";
-import { DisplayCharacter } from "./DisplayCharacter"
 import { retreiveProfile, storeProfile } from "./services/databaseServices";
 import random from 'lodash.random'
 import { DisplayProfile } from "./DisplayProfile";
@@ -25,21 +24,10 @@ export default function FFXIVSearch() {
   const [search, setSearch] = useState(initialSearchState);
   const [submitted, setSubmitted] = useState(false);
   const [profile, getProfiles] = useState('');
-  const [profilesToDisplay, setProfilesToDisplay] = useState<any>([]);
-
-
-  useEffect(() => {
-    getAllProfiles();    
-  }, []);
-
-  const getAllProfiles = () => {
- 
-  }
 
   const searchId = random(0,100000);
 
   const  submitRequest = () => {
-    setSubmitted(true);
     characterSearch(search)
     .then((response) => {
       response.data.Results.map((result) => {
@@ -47,11 +35,12 @@ export default function FFXIVSearch() {
         .catch(function(error) {
         })
         .then((result) => {
-          storeProfile(result, searchId);
-          retreiveProfile(searchId)
+          storeProfile(result);
+          retreiveProfile(search.name)
           .then((response) => {
-            console.log(response);
             const allProfiles = response.data;
+            console.log(allProfiles);
+            setSubmitted(true);
             getProfiles(allProfiles);
           })
         })
